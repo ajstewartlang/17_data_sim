@@ -65,13 +65,16 @@ participant <- rep(1:24)
 
 participant
 
-# Now we need to creaee the conditions - Condition 1 we will label 'fast' and Condition 2 we will label 'slow'
-# We use the c() function to combine the arguments that follow it (i.e., "fast" and "slow") into a vector.
+# Now we need to create the conditions - Condition 1 we will label 'fast' 
+# and Condition 2 we will label 'slow' 
+# We use the c() function to combine the arguments that follow 
+# it (i.e., "fast" and "slow") into a vector.
 # The first 12 participants are in the "fast" condition, and the second 12 the "slow"
 
 condition <- c(rep("fast", times = 12), rep("slow", times = 12))
 
-# We now have "fast" and "slow" repeated 12 times each - test by typing "condition"
+# We now have "fast" and "slow" repeated 12 times each - check this by 
+# typing "condition"
 
 condition
   
