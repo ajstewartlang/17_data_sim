@@ -96,6 +96,29 @@ dv
 # We now need to combined our 3 columns into a tibble. We use the cbind() function to first bind the three
 # variables together as columns, and then tibble() to convert these three combined columns to a tibble.
 
-my_data <- tibble(cbind(participant, condition, dv))
+my_data <- as_tibble(cbind(participant, condition, dv))
 my_data
   
+my_tidied_data <- my_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+my_tidied_data
+
+ggplot(my_tidied_data, aes(x = condition, y = dv, fill = condition)) +
+  geom_violin(width = .25) +
+  stat_summary(fun.data = "mean_cl_boot", colour = "black") +
+  geom_jitter(alpha = .2, width = .05) +
+  guides(fill = FALSE) +
+  labs(x = "Condition", y = "DV (ms.)") +
+  theme_minimal()
+
+ggsave("images/plot1.png")
+
+my_tidied_data %>%
+  group_by(condition) %>%
+  summarise(mean_dv = mean(dv), sd_dv = sd(dv))
+
+# Running a t-test to see if the two conditions differ
+t.test(filter(my_tidied_data, condition == "fast")$dv, 
+       filter(my_tidied_data, condition == "slow")$dv, paired = FALSE)
+
