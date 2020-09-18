@@ -1,4 +1,5 @@
 library(tidyverse) # Usual tidyverse packages
+library(broom) # For turning stats test output to a tibble
 
 # We can use the rnorm() function to sample x times from a normal distribution where we specify
 # the mean and the sd.  
@@ -122,3 +123,39 @@ my_tidied_data %>%
 t.test(filter(my_tidied_data, condition == "fast")$dv, 
        filter(my_tidied_data, condition == "slow")$dv, paired = FALSE)
 
+result <- tidy(t.test(filter(my_tidied_data, condition == "fast")$dv, 
+                      filter(my_tidied_data, condition == "slow")$dv, paired = FALSE))
+result
+
+my_tidied_data
+
+for (i in 1:10) {
+  print(my_tidied_data$dv[i])
+}
+
+# Simulating 10 experiments
+total_samples <- 10
+sample_size <- 24
+participant <- rep(1:sample_size)
+condition <- c(rep("fast", times = sample_size/2),
+               rep("slow", times = sample_size/2))
+all_data <- NULL
+
+for (i in 1:total_samples) {
+  sample <- i
+  set.seed(1233 + i)
+  dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
+  my_data <- as_tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
+}
+
+all_tidied_data <- all_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+ggplot(all_tidied_data, aes(x = condition, y = dv, fill = condition)) +
+  geom_violin(width = .25) + 
+  geom_jitter(alpha = .3, width = .05) +
+  guides(fill = FALSE) + 
+  theme_minimal() +
+  facet_wrap(~sample, ncol = 5, nrow = 2) +
+  labs(x = "Condition", y = "DV(ms.)")
