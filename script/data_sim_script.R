@@ -78,4 +78,24 @@ condition <- c(rep("fast", times = 12), rep("slow", times = 12))
 
 condition
   
+
+# Now we need to simulate our data - we will assume we're sampling from the normal distribution so will
+# use the rnorm function.  This selects samples from a normal distribution where we specify the mean
+# and sd.  We want to simulate the data for our "fast" condition as coming from a distribution with a 
+# mean = 1000 and sd = 50, and the data for our "slow" condition from a distribution with a mean = 1020
+# and sd = 50. We need to make sure we set up our sampling using the rnorm() function in the same way 
+# as we did for specifying the condition variable.
+
+# To make sure we can reproduce these random samples in future, we can use the function set.seed()
+# to specify the start of the random number generation.
+
+set.seed(1234)
+dv <- c(rnorm(12, 1000, 50), rnorm(12, 1020, 50))
+dv
+
+# We now need to combined our 3 columns into a tibble. We use the cbind() function to first bind the three
+# variables together as columns, and then tibble() to convert these three combined columns to a tibble.
+
+my_data <- tibble(cbind(participant, condition, dv))
+my_data
   
