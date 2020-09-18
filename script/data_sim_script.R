@@ -153,9 +153,125 @@ all_tidied_data <- all_data %>%
   mutate(condition = factor(condition), dv = as.integer(dv))
 
 ggplot(all_tidied_data, aes(x = condition, y = dv, fill = condition)) +
-  geom_violin(width = .25) + 
+  geom_violin(width = .5) + 
   geom_jitter(alpha = .3, width = .05) +
   guides(fill = FALSE) + 
   theme_minimal() +
   facet_wrap(~sample, ncol = 5, nrow = 2) +
   labs(x = "Condition", y = "DV(ms.)")
+
+ggsave("images/plot2.png")
+
+all_tidied_data %>%
+  group_by(condition, sample) %>%
+  summarise(average = mean(dv)) %>%
+  ggplot(aes(x = condition, y = average, group = condition,
+             label = sample)) +
+  geom_jitter(width = .1, alpha = .5) +
+  stat_summary(fun.data = "mean_cl_boot", colour = "blue") +
+  geom_text(check_overlap = TRUE, nudge_x = .2, nudge_y = 0, colour =
+              "black") +
+  labs(x = "Condition", y = "DV(ms.)") +
+  theme_minimal()
+
+ggsave("images/plot3.png")
+
+# Simulating 100 experiments
+total_samples <- 100
+sample_size <- 24
+participant <- rep(1:sample_size)
+condition <- c(rep("fast", times = sample_size/2),
+               rep("slow", times = sample_size/2))
+all_data <- NULL
+
+for (i in 1:total_samples) {
+  sample <- i
+  set.seed(1233 + i)
+  dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
+  my_data <- as_tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
+}
+
+all_tidied_data <- all_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+all_tidied_data %>%
+  group_by(condition, sample) %>%
+  summarise(average = mean(dv)) %>%
+  ggplot(aes(x = condition, y = average, group = condition,
+             label = sample)) +
+  geom_jitter(width = .1, alpha = .5) +
+  stat_summary(fun.data = "mean_cl_boot", colour = "blue") +
+  geom_text(check_overlap = TRUE, nudge_x = .2, nudge_y = 0, colour =
+              "black", size = 3) +
+  labs(x = "Condition", y = "DV(ms.)") +
+  theme_minimal()
+
+ggsave("images/plot4.png")
+
+result <- NULL
+for (i in 1:total_samples) {
+  result <- rbind(tidy(t.test(filter(all_tidied_data, condition == "fast" & sample == i)$dv,
+                              filter(all_tidied_data, condition == "slow" & sample == i)$dv,
+                              paired = FALSE)), result)
+}
+
+result
+
+result %>% 
+  filter(p.value < .05) %>%
+  count()
+
+
+
+# Simulating 100 experiments with sample size = 200
+total_samples <- 100
+sample_size <- 200
+participant <- rep(1:sample_size)
+condition <- c(rep("fast", times = sample_size/2),
+               rep("slow", times = sample_size/2))
+all_data <- NULL
+
+for (i in 1:total_samples) {
+  sample <- i
+  set.seed(1233 + i)
+  dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
+  my_data <- as_tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
+}
+
+all_tidied_data <- all_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+all_tidied_data %>%
+  group_by(condition, sample) %>%
+  summarise(average = mean(dv)) %>%
+  ggplot(aes(x = condition, y = average, group = condition,
+             label = sample)) +
+  geom_jitter(width = .1, alpha = .5) +
+  stat_summary(fun.data = "mean_cl_boot", colour = "blue") +
+  geom_text(check_overlap = TRUE, nudge_x = .2, nudge_y = 0, colour =
+              "black", size = 3) +
+  labs(x = "Condition", y = "DV(ms.)") +
+  theme_minimal()
+
+
+result <- NULL
+for (i in 1:total_samples) {
+  result <- rbind(tidy(t.test(filter(all_tidied_data, condition == "fast" & sample == i)$dv,
+                              filter(all_tidied_data, condition == "slow" & sample == i)$dv,
+                              paired = FALSE)), result)
+}
+
+result
+
+result %>% 
+  filter(p.value < .05) %>%
+  count()
+
+result %>%
+  ggplot(aes(x = p.value)) +
+  geom_histogram()
+
+ggsave("images/plot5.png")
+
