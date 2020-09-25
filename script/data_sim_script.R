@@ -60,7 +60,7 @@ ggplot(my_data) +
 
 # First let's create a vector for our participants.  It will range from 1 to 24
 
-participant <- rep(1:24)
+participant <- seq(1:24)
 
 # We can check we have what we want by typing the variable name
 

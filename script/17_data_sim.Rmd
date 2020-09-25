@@ -62,9 +62,156 @@ set.seed(1234)
 rnorm(5, 0, 1)
 ```
 
-The two sequences are identical, and will always be identical is preceded by the same seed (or starting point) for the random number generator algorithm.
+The two sequences are identical, and will always be identical if preceded by the same seed (or starting point) for the random number generator algorithm.
 
-## Simulating a dataset 
+## Simulating one dataset 
+
+First let's simulate data from a one factor between participants experiment. Each of the 24 participants will have one dependent variable measure. First let's create a sequence of numbers 1:24 correspinding to our participant numbers.  In R, this is also known as a `vector` - one of the basic data structures. It contains elements of the same type (in this case integers).
+
+```{r}
+participant <- seq(1:24)
+participant
+```
+
+Now we need to create the conditions - Condition 1 we will label "fast" and Condition 2 we will label "slow". We use the `c()` function to combine the arguments that follow it (i.e., "fast" and "slow") into a vector. The first 12 participants are in the "fast" condition, and the second 12 are in the "slow" condition. We use the `rep()` function to replicate an element (defined in the first argument) a certain number of times (defined in the second argument.)
+
+```{r}
+condition <- c(rep("fast", times = 12), rep("slow", times = 12))
+condition
+```
+
+We now have "fast" and "slow" repeated 12 times each.
+
+Now we need to simulate our data - we will assume we're sampling from the normal distribution so will use the `rnorm()` function.  This selects samples from a normal distribution where we specify the mean and sd.  We want to simulate the data for our "fast" condition as coming from a distribution with a mean = 1000 and sd = 50, and the data for our "slow" condition from a distribution with a mean = 1020 and sd = 50. We need to make sure we set up our sampling using the `rnorm()` function in the same order as we did for specifying the condition variable.
+
+To make sure we can reproduce these random samples in future, we can use the function `set.seed()` to specify the starting point of the random number generation.
+
+```{r}
+set.seed(1234)
+dv <- c(rnorm(12, 1000, 50), rnorm(12, 1020, 50))
+dv
+```
+
+We now need to combined our 3 columns into a tibble. We use the `cbind()` function to first bind the three variables together as columns, and then `as_tibble()` to convert these three combined columns to a tibble.
+
+```{r}
+my_data <- as_tibble(cbind(participant, condition, dv))
+my_data
+```
+
+As you can see, the columns in the tibble aren't yet of the correct type. The column `condition` should be a factor, and `dv` an integer. Let's fix that and map the tibble with the renamed columns onto a new variable called `my_tidied_data`.
+
+```{r}
+my_tidied_data <- my_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+my_tidied_data
+```
+
+Let's build a plot to ensure our data looks like it should.
+
+```{r, message=FALSE}
+ggplot(my_tidied_data, aes(x = condition, y = dv, fill = condition)) +
+  geom_violin(width = .25) +
+  stat_summary(fun.data = "mean_cl_boot", colour = "black") +
+  geom_jitter(alpha = .2, width = .05) +
+  guides(fill = FALSE) +
+  labs(x = "Condition", y = "DV (ms.)") +
+  theme_minimal()
+```
+
+Given a bit of sampling error, this looks about right. Now, let's run a between participants t-test to see if the difference between the conditions is significant. I am going to use the `tidy()` function from the `broom` package to store the output of `t.test()` as a tibble itself.
+
+```{r}
+t.test(filter(my_tidied_data, condition == "fast")$dv, 
+       filter(my_tidied_data, condition == "slow")$dv, paired = FALSE)
+
+result <- tidy(t.test(filter(my_tidied_data, condition == "fast")$dv, 
+                      filter(my_tidied_data, condition == "slow")$dv, paired = FALSE))
+result
+```
+
+As you'll see from the above, the *p*-value for the *t*-test is = .0385. So we have found a difference. But is N=24 a big enough sample size to consistenly find a significant difference? Or did we just get lucky in this one case?
+
+## Simulating 10 datasets
+
+Let's turn now to simulating a number of datasets, each with a sample size of 24. The next code chunk essentially runs through the procedure for creating one dataset, but 10 times.
+
+```{r}
+total_samples <- 10
+sample_size <- 24
+participant <- rep(1:sample_size)
+condition <- c(rep("fast", times = sample_size/2),
+               rep("slow", times = sample_size/2))
+all_data <- NULL
+
+for (i in 1:total_samples) {
+  sample <- i
+  set.seed(1233 + i)
+  dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
+  my_data <- as_tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
+}
+
+all_tidied_data <- all_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+```
+
+Let's plot the averages for each of the two conditions from each of these 10 simulated datasets on the same graph.
+
+```{r}
+all_tidied_data %>%
+  group_by(condition, sample) %>%
+  summarise(average = mean(dv)) %>%
+  ggplot(aes(x = condition, y = average, group = condition,
+             label = sample)) +
+  geom_jitter(width = .1, alpha = .5) +
+  stat_summary(fun.data = "mean_cl_boot", colour = "blue") +
+  geom_text(check_overlap = TRUE, nudge_x = .2, nudge_y = 0, colour =
+              "black") +
+  labs(x = "Condition", y = "DV(ms.)") +
+  theme_minimal()
+```
+
+The blue dots corresponds to the mean of means - and are pretty close to the population means. There's quite a lot of variation around each of these dots though, again indicative of sampling error. The mean for our “fast” condition is quite close to the population mean (1000), while the mean for our “slow” condition is almost exactly the population mean (1020). Sample 2 has an extreme mean for the "slow" condition - indeed, numerically the "slow" condition is faster than the "fast" condition in Sample 2. This is sampling error in practice and further highlights the problem with small sample sizes.
+
+## Simulating 100 datasets
+
+Now, instead of simulating 10 datasets let's simulate 100. The code below for simulating 100 datasets is identical to the code above for simulating 10 *apart* from in one place. Can you spot it? Do you see how that one change results now in 100 simulations?
+
+```{r}
+total_samples <- 100
+sample_size <- 24
+participant <- rep(1:sample_size)
+condition <- c(rep("fast", times = sample_size/2),
+               rep("slow", times = sample_size/2))
+all_data <- NULL
+
+for (i in 1:total_samples) {
+  sample <- i
+  set.seed(1233 + i)
+  dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
+  my_data <- as_tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
+}
+
+all_tidied_data <- all_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+all_tidied_data %>%
+  group_by(condition, sample) %>%
+  summarise(average = mean(dv)) %>%
+  ggplot(aes(x = condition, y = average, group = condition,
+             label = sample)) +
+  geom_jitter(width = .1, alpha = .5) +
+  stat_summary(fun.data = "mean_cl_boot", colour = "blue") +
+  geom_text(check_overlap = TRUE, nudge_x = .2, nudge_y = 0, colour =
+              "black", size = 3) +
+  labs(x = "Condition", y = "DV(ms.)") +
+  theme_minimal()
+```
+
+Overall the “Slow” condition RTs are higher than the “Fast” Condition RTs - but we can spot some simulations where the difference is negligible or even goes the other way (e.g., Simulation 100). The blue circles corresponds to the overall means and are pretty much exactly equal to the population means of 1000 and 1020.
 
 ## Improve this Workshop
 
