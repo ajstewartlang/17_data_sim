@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview 
 
+In this sesssion we are going to examine data simulation. Specifically, we'll look at why simulating data sets before you run a study can be incredibly helpful in terms of determining whether you have enough power in your design to detect the effect size of interest. Data simulation can also be helpful in ensuring that you are able to build the statistical model that you want to when it comes to analysing data from your experiment. This can be particularly important in the context of mixed models where you need to ensure the appropriate number of observations at the different levels of your random effects in order to be able to estimate the model parameters. Data simulation can also be helpful in understanding concepts related to the distribution of p-values as a function of sample size, effect sizes etc.
+
 &nbsp;&nbsp;
 
 [video 1 here]
@@ -31,9 +33,38 @@ You can download the slides in .odp format by clicking [here](../slides/data_sim
 
 &nbsp;&nbsp;
 
-Once you've watched the video above, run the code below on your own machines.
+Once you've watched the video above, run the code below on your own machines. The following code corresponds to the bulk of the code I use in the slides and talk about in the video.
 
+We first need to load the key packages that we'll be using. They are the `tidyverse` and the `broom` package. The `broom` package contains functions which allow us to turn the output of statistical tests into tibbles.
 
+```{r, message=FALSE}
+library(tidyverse) 
+library(broom) 
+```
+
+## Generating random numbers
+
+Computers tend to generate numbers *pseudo*randomly rather than in a truly randoem fashion. They do this using an algorithm. This algorithm has a starting point, and if you ensure it always starts at the same point, it will always produce the same sequence of random numbers. In R, we set the starting point using the `set.seed()` function. First, let's generate two sequences of random numbers without first setting the starting point of the algorithm.
+
+Using the `rnorm()` function we generate 5 numbers from a distribution with a mean of 0 and a standard deviation of 1. We do this twice.
+
+```{r}
+rnorm(5, 0, 1)
+rnorm(5, 0, 1)
+```
+
+As you can see, the sequences differ. Our code and output associated with generating the random numbers isn't reproducible. Run it again and you'll get two new sequence of 5 random numbers. We can however make things reproducible by using the `set.seed()` function before each `rnorm()` call.
+
+```{r}
+set.seed(1234)
+rnorm(5, 0, 1)
+set.seed(1234)
+rnorm(5, 0, 1)
+```
+
+The two sequences are identical, and will always be identical is preceded by the same seed (or starting point) for the random number generator algorithm.
+
+## Simulating a dataset 
 
 ## Improve this Workshop
 
