@@ -244,7 +244,7 @@ So, only 17 of the 100 simulations detects the difference - even thought the dif
 
 ## Your Challenge
 
-Change the above code so that N=200 for each simulation. Do you now find that for 80 out of 100 simulated datasets you are detecting a statistically significant difference? What happens if you vary the size of the standard deviations around the means for the two conditions? If variability around the mean goes up (i.e., the standard deviation is increased), do you need more or fewer participants to find the effect with 0.80 power?
+Change the above code so that N=200 for each simulation. Do you now find that for 80 out of 100 simulated datasets you are detecting a statistically significant difference? What happens if you vary the size of the standard deviations around the means for the two conditions? If variability around the mean goes up (i.e., the standard deviation is increased), do you need more or fewer participants to detect the effect with 0.80 power?
 
 ## Improve this Workshop
 

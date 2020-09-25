@@ -1556,9 +1556,9 @@ library(broom) </code></pre>
 <p>Computers tend to generate numbers <em>pseudo</em>randomly rather than in a truly randoem fashion. They do this using an algorithm. This algorithm has a starting point, and if you ensure it always starts at the same point, it will always produce the same sequence of random numbers. In R, we set the starting point using the <code>set.seed()</code> function. First, let’s generate two sequences of random numbers without first setting the starting point of the algorithm.</p>
 <p>Using the <code>rnorm()</code> function we generate 5 numbers from a distribution with a mean of 0 and a standard deviation of 1. We do this twice.</p>
 <pre class="r"><code>rnorm(5, 0, 1)</code></pre>
-<pre><code>## [1]  2.3751038  1.1998280 -0.6816825 -1.1864377 -0.8740206</code></pre>
+<pre><code>## [1] -1.9075269 -1.3568148  0.8283127  0.2104371  0.4766582</code></pre>
 <pre class="r"><code>rnorm(5, 0, 1)</code></pre>
-<pre><code>## [1] -1.4057515 -0.4747381  1.0058696  0.1763834  1.2523234</code></pre>
+<pre><code>## [1] -0.6215857  1.5960203  0.1524505 -2.0958936 -3.2249929</code></pre>
 <p>As you can see, the sequences differ. Our code and output associated with generating the random numbers isn’t reproducible. Run it again and you’ll get two new sequence of 5 random numbers. We can however make things reproducible by using the <code>set.seed()</code> function before each <code>rnorm()</code> call.</p>
 <pre class="r"><code>set.seed(1234)
 rnorm(5, 0, 1)</code></pre>
@@ -1767,7 +1767,7 @@ result</code></pre>
 </div>
 <div id="your-challenge" class="section level2">
 <h2>Your Challenge</h2>
-<p>Change the above code so that N=200 for each simulation. Do you now find that for 80 out of 100 simulated datasets you are detecting a statistically significant difference? What happens if you vary the size of the standard deviations around the means for the two conditions? If variability around the mean goes up (i.e., the standard deviation is increased), do you need more or fewer participants to find the effect with 0.80 power?</p>
+<p>Change the above code so that N=200 for each simulation. Do you now find that for 80 out of 100 simulated datasets you are detecting a statistically significant difference? What happens if you vary the size of the standard deviations around the means for the two conditions? If variability around the mean goes up (i.e., the standard deviation is increased), do you need more or fewer participants to detect the effect with 0.80 power?</p>
 </div>
 <div id="improve-this-workshop" class="section level2">
 <h2>Improve this Workshop</h2>
