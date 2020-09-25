@@ -1556,9 +1556,9 @@ library(broom) </code></pre>
 <p>Computers tend to generate numbers <em>pseudo</em>randomly rather than in a truly randoem fashion. They do this using an algorithm. This algorithm has a starting point, and if you ensure it always starts at the same point, it will always produce the same sequence of random numbers. In R, we set the starting point using the <code>set.seed()</code> function. First, let’s generate two sequences of random numbers without first setting the starting point of the algorithm.</p>
 <p>Using the <code>rnorm()</code> function we generate 5 numbers from a distribution with a mean of 0 and a standard deviation of 1. We do this twice.</p>
 <pre class="r"><code>rnorm(5, 0, 1)</code></pre>
-<pre><code>## [1]  0.6718339 -0.4582401 -2.5766331 -0.2936489 -0.1105454</code></pre>
+<pre><code>## [1]  2.3751038  1.1998280 -0.6816825 -1.1864377 -0.8740206</code></pre>
 <pre class="r"><code>rnorm(5, 0, 1)</code></pre>
-<pre><code>## [1] -0.09740963  0.14972590 -0.41205057 -0.23170834 -1.50580340</code></pre>
+<pre><code>## [1] -1.4057515 -0.4747381  1.0058696  0.1763834  1.2523234</code></pre>
 <p>As you can see, the sequences differ. Our code and output associated with generating the random numbers isn’t reproducible. Run it again and you’ll get two new sequence of 5 random numbers. We can however make things reproducible by using the <code>set.seed()</code> function before each <code>rnorm()</code> call.</p>
 <pre class="r"><code>set.seed(1234)
 rnorm(5, 0, 1)</code></pre>
@@ -1657,7 +1657,7 @@ result</code></pre>
 ##      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ## 1    -41.8      977.     1019.     -2.20  0.0385      22.0    -81.2     -2.43
 ## # … with 2 more variables: method &lt;chr&gt;, alternative &lt;chr&gt;</code></pre>
-<p>As you’ll see from the above, the <em>p</em>-value for the <em>t</em>-test is = .0385. So we have found a difference. But is N=24 a big enough sample size to consistenly find a significant difference? Or did we just get lucky in this one case?</p>
+<p>As you’ll see from the above, the <em>p</em>-value for the <em>t</em>-test is = .0385. So we have found a difference. But is N=24 a big enough sample size to consistenly detect a significant difference? Or did we just get lucky in this one case?</p>
 </div>
 <div id="simulating-10-datasets" class="section level2">
 <h2>Simulating 10 Datasets</h2>

@@ -135,7 +135,7 @@ result <- tidy(t.test(filter(my_tidied_data, condition == "fast")$dv,
 result
 ```
 
-As you'll see from the above, the *p*-value for the *t*-test is = .0385. So we have found a difference. But is N=24 a big enough sample size to consistenly find a significant difference? Or did we just get lucky in this one case?
+As you'll see from the above, the *p*-value for the *t*-test is = .0385. So we have found a difference. But is N=24 a big enough sample size to consistenly detect a significant difference? Or did we just get lucky in this one case?
 
 ## Simulating 10 Datasets
 
