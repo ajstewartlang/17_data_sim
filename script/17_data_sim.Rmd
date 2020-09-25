@@ -213,6 +213,35 @@ all_tidied_data %>%
 
 Overall the “Slow” condition RTs are higher than the “Fast” Condition RTs - but we can spot some simulations where the difference is negligible or even goes the other way (e.g., Simulation 100). The blue circles corresponds to the overall means and are pretty much exactly equal to the population means of 1000 and 1020.
 
+Now, let's run *t*-tests for each of the 100 datasets.
+
+```{r}
+result <- NULL
+for (i in 1:total_samples) {
+  result <- rbind(tidy(t.test(filter(all_tidied_data, 
+                                     condition == "fast" & sample == i)$dv,
+                              filter(all_tidied_data, 
+                                     condition == "slow" & sample == i)$dv,
+                              paired = FALSE)), result)
+}
+
+result
+```
+
+How many of these 100 simulated datasets have produced a difference that is statistically significant? Remember, we know the "Fast" and "Slow" populations do differ from each other. But can we detect this difference consistently?
+
+```{r}
+result %>% 
+  filter(p.value < .05) %>%
+  count()
+```
+
+So, only 17 of the 100 simulations detects the difference - even thought the difference is there and waiting to be found. With 24 participants, we have a *very* under-powered experiment. Indeed, the power for this design to detect the effect we are looking for is just 0.17. We *should* be aiming to run studies with about 0.80 power. Much lower than 0.80, we are wasting our time.
+
+## Your Challenges
+
+Change the above code so that N=200. Do you now find that for 80 out of 100 simulated datasets you are detecting a statistically significant difference? What happens if you vary the size of the standard deviations around the means for the two conditions? If variability around the mean goes up (i.e., the standard deviation is increased), do you need more or fewer participants to find the effect with 0.80 power?
+
 ## Improve this Workshop
 
 If you spot any issues/errors in this workshop, you can raise an issue or create a pull request for [this repo](https://github.com/ajstewartlang/17_data_sim). 
