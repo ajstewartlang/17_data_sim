@@ -275,3 +275,142 @@ result %>%
 
 ggsave("images/plot5.png")
 
+result %>%
+  filter(p.value < .05) %>%
+  ggplot(aes(x = p.value)) +
+  geom_histogram()
+
+ggsave("images/plot6.png")
+
+# Examining the relationship between p-values and Cohen's d when an effect
+# is found.
+
+# First with an underpowered set of studies.
+
+total_samples <- 100
+sample_size <- 24
+participant <- rep(1:sample_size)
+condition <- c(rep("fast", times = sample_size/2),
+               rep("slow", times = sample_size/2))
+all_data <- NULL
+
+for (i in 1:total_samples) {
+  sample <- i
+  set.seed(1233 + i)
+  dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
+  my_data <- as_tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
+}
+
+all_tidied_data <- all_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+result <- NULL
+for (i in 1:total_samples) {
+  result <- rbind(tidy(t.test(filter(all_tidied_data, condition == "fast" & sample == i)$dv,
+                              filter(all_tidied_data, condition == "slow" & sample == i)$dv,
+                              paired = FALSE)), result)
+}
+
+result_data <- as_tibble(filter(cbind(seq(1:100), result), result$p.value < .05))
+
+colnames(result_data)[1] <- "sample"
+
+temp <- all_tidied_data %>%
+  group_by(sample, condition) %>% 
+  summarise(mean = mean(dv))
+
+temp <- spread(temp, "condition", "mean", c("fast", "slow"))
+
+temp1 <- all_data %>% 
+  group_by(sample, condition) %>% 
+  summarise(sd = sd(dv))
+
+temp1 <- spread(temp1, "condition", "sd", c("fast", "slow"))
+
+temp2 <- inner_join(temp, temp1, by = "sample")
+colnames(temp2) <- c("sample", "fast_mean", "slow_mean", "fast_sd", "slow_sd")
+
+temp2$sample <- as.integer(temp2$sample)
+temp2$fast_mean <- as.integer(temp2$fast_mean)
+temp2$slow_mean <- as.integer(temp2$slow_mean)
+temp2$fast_sd <- as.integer(temp2$fast_sd)
+temp2$slow_sd <- as.integer(temp2$slow_sd)
+
+temp3 <- left_join(result_data, temp2, by = "sample")
+
+temp4 <- temp3 %>% 
+  mutate(d = (slow_mean-fast_mean)/sqrt(mean(c((slow_sd*slow_sd), (fast_sd*fast_sd)))))
+
+ggplot(temp4, aes (x = d)) + 
+  geom_histogram(bins = 30) + 
+  xlab("Cohen's d estimate") + 
+  geom_vline(xintercept = .4, colour = "red") + 
+  xlim(-.2, 1.1)
+
+ggsave("images/plot7.png")
+
+# Then with decent powered set of studies
+
+total_samples <- 100
+sample_size <- 200
+participant <- rep(1:sample_size)
+condition <- c(rep("fast", times = sample_size/2),
+               rep("slow", times = sample_size/2))
+all_data <- NULL
+
+for (i in 1:total_samples) {
+  sample <- i
+  set.seed(1233 + i)
+  dv <- c(rnorm(sample_size/2, 1000, 50), rnorm(sample_size/2, 1020, 50))
+  my_data <- as_tibble(cbind(participant, condition, dv, sample))
+  all_data <- rbind(my_data, all_data)
+}
+
+all_tidied_data <- all_data %>%
+  mutate(condition = factor(condition), dv = as.integer(dv))
+
+result <- NULL
+for (i in 1:total_samples) {
+  result <- rbind(tidy(t.test(filter(all_tidied_data, condition == "fast" & sample == i)$dv,
+                              filter(all_tidied_data, condition == "slow" & sample == i)$dv,
+                              paired = FALSE)), result)
+}
+
+result_data <- as_tibble(filter(cbind(seq(1:100), result), result$p.value < .05))
+
+colnames(result_data)[1] <- "sample"
+
+temp <- all_tidied_data %>%
+  group_by(sample, condition) %>% 
+  summarise(mean = mean(dv))
+
+temp <- spread(temp, "condition", "mean", c("fast", "slow"))
+
+temp1 <- all_data %>% 
+  group_by(sample, condition) %>% 
+  summarise(sd = sd(dv))
+
+temp1 <- spread(temp1, "condition", "sd", c("fast", "slow"))
+
+temp2 <- inner_join(temp, temp1, by = "sample")
+colnames(temp2) <- c("sample", "fast_mean", "slow_mean", "fast_sd", "slow_sd")
+
+temp2$sample <- as.integer(temp2$sample)
+temp2$fast_mean <- as.integer(temp2$fast_mean)
+temp2$slow_mean <- as.integer(temp2$slow_mean)
+temp2$fast_sd <- as.integer(temp2$fast_sd)
+temp2$slow_sd <- as.integer(temp2$slow_sd)
+
+temp3 <- left_join(result_data, temp2, by = "sample")
+
+temp4 <- temp3 %>% 
+  mutate(d = (slow_mean-fast_mean)/sqrt(mean(c((slow_sd*slow_sd), (fast_sd*fast_sd)))))
+
+ggplot(temp4, aes (x = d)) + 
+  geom_histogram(bins = 30) + 
+  xlab("Cohen's d estimate") + 
+  geom_vline(xintercept = .4, colour = "red") + 
+  xlim(-.2, 1.1)
+
+ggsave("images/plot8.png")
