@@ -15,12 +15,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Overview 
 
-In this sesssion we are going to examine data simulation. Specifically, we'll look at why simulating data sets before you run a study can be incredibly helpful in terms of determining whether you have enough power in your design to detect the effect size of interest. Data simulation can also be helpful in ensuring that you are able to build the statistical model that you want to when it comes to analysing data from your experiment. This can be particularly important in the context of mixed models where you need to ensure the appropriate number of observations at the different levels of your random effects in order to be able to estimate the model parameters. Data simulation can also be helpful in understanding concepts related to the distribution of p-values as a function of sample size, effect sizes etc.
+In this sesssion we are going to examine data simulation. Specifically, we'll look at why simulating data sets before you run a study can be incredibly helpful in terms of determining whether you have enough power in your design to detect the effect size of interest. Data simulation can also be helpful in ensuring that you are able to build the statistical model that you want to when it comes to analysing data from your experiment. This can be particularly important in the context of mixed models where you need to ensure the appropriate number of observations at the different levels of your random effects in order to be able to estimate the model parameters. Data simulation can also be helpful in understanding concepts related to the distribution of *p*-values as a function of sample size, effect sizes etc.
 
 &nbsp;&nbsp;
 
-[video 1 here]
+<center>
 
+<iframe width="560" height="315" src="https://youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+
+</center>
 &nbsp;&nbsp;
 
 ## Slides
@@ -163,7 +166,7 @@ all_tidied_data <- all_data %>%
 
 Let's plot the averages for each of the two conditions from each of these 10 simulated datasets on the same graph.
 
-```{r}
+```{r, message=FALSE}
 all_tidied_data %>%
   group_by(condition, sample) %>%
   summarise(average = mean(dv)) %>%
@@ -183,7 +186,7 @@ The blue dots corresponds to the mean of means - and are pretty close to the pop
 
 Now, instead of simulating 10 datasets let's simulate 100. The code below for simulating 100 datasets is identical to the code above for simulating 10 *apart* from in one place. Can you spot it? Do you see how that one change results now in 100 simulations?
 
-```{r}
+```{r, message=FALSE}
 total_samples <- 100
 sample_size <- 24
 participant <- rep(1:sample_size)
