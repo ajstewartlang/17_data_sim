@@ -244,10 +244,13 @@ result %>%
 ```
 
 So, only 17 of the 100 simulations detects the difference - even thought the difference is there and waiting to be found. With 24 participants, we have a *very* under-powered experiment. Indeed, the power for this design to detect the effect we are looking for is just 0.17. We *should* be aiming to run studies with about 0.80 power. Much lower than 0.80, we are wasting our time.
-
+```{r, eval=FALSE, echo=FALSE}
 ## Your Challenge
 
 Change the above code so that N=200 for each simulation. Do you now find that for 80 out of 100 simulated datasets you are detecting a statistically significant difference? What happens if you vary the size of the standard deviations around the means for the two conditions? If variability around the mean goes up (i.e., the standard deviation is increased), do you need more or fewer participants to detect the effect with 0.80 power?
+```
+
+
 
 ## Improve this Workshop
 
