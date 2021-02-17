@@ -244,6 +244,7 @@ result %>%
 ```
 
 So, only 17 of the 100 simulations detects the difference - even thought the difference is there and waiting to be found. With 24 participants, we have a *very* under-powered experiment. Indeed, the power for this design to detect the effect we are looking for is just 0.17. We *should* be aiming to run studies with about 0.80 power. Much lower than 0.80, we are wasting our time.
+
 ```{r, eval=FALSE, echo=FALSE}
 ## Your Challenge
 
