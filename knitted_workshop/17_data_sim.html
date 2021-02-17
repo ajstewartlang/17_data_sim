@@ -1585,7 +1585,7 @@ div.tocify {
 <p>In this sesssion we are going to examine data simulation. Specifically, we’ll look at why simulating data sets before you run a study can be incredibly helpful in terms of determining whether you have enough power in your design to detect the effect size of interest. Data simulation can also be helpful in ensuring that you are able to build the statistical model that you want to when it comes to analysing data from your experiment. This can be particularly important in the context of mixed models where you need to ensure the appropriate number of observations at the different levels of your random effects in order to be able to estimate the model parameters. Data simulation can also be helpful in understanding concepts related to the distribution of <em>p</em>-values as a function of sample size, effect sizes etc.</p>
 <p>  </p>
 <center>
-<iframe width="560" height="315" src="https://youtube.com/embed/" frameborder="0" allowfullscreen>
+<iframe width="560" height="315" src="https://youtube.com/embed/dEhx0fRJwak" frameborder="0" allowfullscreen>
 </iframe>
 </center>
 <p>  </p>
@@ -1607,9 +1607,9 @@ library(broom) </code></pre>
 <p>Computers tend to generate numbers <em>pseudo</em>randomly rather than in a truly randoem fashion. They do this using an algorithm. This algorithm has a starting point, and if you ensure it always starts at the same point, it will always produce the same sequence of random numbers. In R, we set the starting point using the <code>set.seed()</code> function. First, let’s generate two sequences of random numbers without first setting the starting point of the algorithm.</p>
 <p>Using the <code>rnorm()</code> function we generate 5 numbers from a distribution with a mean of 0 and a standard deviation of 1. We do this twice.</p>
 <pre class="r"><code>rnorm(5, 0, 1)</code></pre>
-<pre><code>## [1] -0.4346972 -0.8869462  0.5374887  1.9165397  0.8577160</code></pre>
+<pre><code>## [1] -1.42020284  1.68105040 -0.02273563  1.27937398  2.13594442</code></pre>
 <pre class="r"><code>rnorm(5, 0, 1)</code></pre>
-<pre><code>## [1]  1.2463748 -1.4773630  0.1828691  0.7839775  0.7096743</code></pre>
+<pre><code>## [1]  0.01388909  0.12533095 -0.02938404  0.77014470  1.17642354</code></pre>
 <p>As you can see, the sequences differ. Our code and output associated with generating the random numbers isn’t reproducible. Run it again and you’ll get two new sequence of 5 random numbers. We can however make things reproducible by using the <code>set.seed()</code> function before each <code>rnorm()</code> call.</p>
 <pre class="r"><code>set.seed(1234)
 rnorm(5, 0, 1)</code></pre>
@@ -1621,6 +1621,12 @@ rnorm(5, 0, 1)</code></pre>
 </div>
 <div id="simulating-1-dataset" class="section level2">
 <h2>Simulating 1 Dataset</h2>
+<p>  </p>
+<center>
+<iframe width="560" height="315" src="https://youtube.com/embed/squkvNuJGTY" frameborder="0" allowfullscreen>
+</iframe>
+</center>
+<p>  </p>
 <p>First let’s simulate data from a one factor between participants experiment. Each of the 24 participants will have one dependent variable measure. First let’s create a sequence of numbers 1:24 correspinding to our participant numbers. In R, this is also known as a <code>vector</code> - one of the basic data structures. It contains elements of the same type (in this case integers).</p>
 <pre class="r"><code>participant &lt;- seq(1:24)
 participant</code></pre>
@@ -1712,6 +1718,12 @@ result</code></pre>
 </div>
 <div id="simulating-10-datasets" class="section level2">
 <h2>Simulating 10 Datasets</h2>
+<p>  </p>
+<center>
+<iframe width="560" height="315" src="https://youtube.com/embed/yegw2gyRXuU" frameborder="0" allowfullscreen>
+</iframe>
+</center>
+<p>  </p>
 <p>Let’s turn now to simulating a number of datasets, each with a sample size of 24. The next code chunk essentially runs through the procedure for creating one dataset, but it does so 10 times (this giving us 10 simulated datasets).</p>
 <pre class="r"><code>total_samples &lt;- 10
 sample_size &lt;- 24
@@ -1747,6 +1759,12 @@ all_tidied_data &lt;- all_data %&gt;%
 </div>
 <div id="simulating-100-datasets" class="section level2">
 <h2>Simulating 100 Datasets</h2>
+<p>  </p>
+<center>
+<iframe width="560" height="315" src="https://youtube.com/embed/VLEMEEpz3j0" frameborder="0" allowfullscreen>
+</iframe>
+</center>
+<p>  </p>
 <p>Now, instead of simulating 10 datasets let’s simulate 100. The code below for simulating 100 datasets is identical to the code above for simulating 10 <em>apart</em> from in one place. Can you spot it? Do you see how that one change results now in 100 simulations?</p>
 <pre class="r"><code>total_samples &lt;- 100
 sample_size &lt;- 24

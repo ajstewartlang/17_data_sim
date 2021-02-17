@@ -21,7 +21,7 @@ In this sesssion we are going to examine data simulation. Specifically, we'll lo
 
 <center>
 
-<iframe width="560" height="315" src="https://youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://youtube.com/embed/dEhx0fRJwak" frameborder="0" allowfullscreen></iframe>
 
 </center>
 &nbsp;&nbsp;
@@ -72,6 +72,15 @@ rnorm(5, 0, 1)
 The two sequences are identical, and will always be identical if preceded by the same seed (or starting point) for the random number generator algorithm.
 
 ## Simulating 1 Dataset 
+
+&nbsp;&nbsp;
+
+<center>
+
+<iframe width="560" height="315" src="https://youtube.com/embed/squkvNuJGTY" frameborder="0" allowfullscreen></iframe>
+
+</center>
+&nbsp;&nbsp;
 
 First let's simulate data from a one factor between participants experiment. Each of the 24 participants will have one dependent variable measure. First let's create a sequence of numbers 1:24 correspinding to our participant numbers.  In R, this is also known as a `vector` - one of the basic data structures. It contains elements of the same type (in this case integers).
 
@@ -142,6 +151,15 @@ As you'll see from the above, the *p*-value for the *t*-test is = .0385. So we h
 
 ## Simulating 10 Datasets
 
+&nbsp;&nbsp;
+
+<center>
+
+<iframe width="560" height="315" src="https://youtube.com/embed/yegw2gyRXuU" frameborder="0" allowfullscreen></iframe>
+
+</center>
+&nbsp;&nbsp;
+
 Let's turn now to simulating a number of datasets, each with a sample size of 24. The next code chunk essentially runs through the procedure for creating one dataset, but it does so 10 times (this giving us 10 simulated datasets).
 
 ```{r}
@@ -183,6 +201,15 @@ all_tidied_data %>%
 The blue dots corresponds to the mean of means - and are pretty close to the population means. There's quite a lot of variation around each of these dots though, again indicative of sampling error. The mean for our “fast” condition is quite close to the population mean (1000), while the mean for our “slow” condition is almost exactly the population mean (1020). Sample 2 has an extreme mean for the "slow" condition - indeed, numerically the "slow" condition is faster than the "fast" condition in Sample 2. This is sampling error in practice and further highlights the problem with small sample sizes.
 
 ## Simulating 100 Datasets
+
+&nbsp;&nbsp;
+
+<center>
+
+<iframe width="560" height="315" src="https://youtube.com/embed/VLEMEEpz3j0" frameborder="0" allowfullscreen></iframe>
+
+</center>
+&nbsp;&nbsp;
 
 Now, instead of simulating 10 datasets let's simulate 100. The code below for simulating 100 datasets is identical to the code above for simulating 10 *apart* from in one place. Can you spot it? Do you see how that one change results now in 100 simulations?
 
